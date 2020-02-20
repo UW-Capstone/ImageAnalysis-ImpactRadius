@@ -27,6 +27,7 @@ public class ImageAnalysisGUI extends JFrame implements ActionListener, Property
     private JMenuBar menuBar = new JMenuBar();
     private JMenu fileMenu = new JMenu("File");
     private JMenuItem fileMenuItem = new JMenuItem("Choose File");
+    private JMenuItem saveFileMenuItem = new JMenuItem("Save data file");
     private JMenuItem testMethodMenuItem = new JMenuItem("Test Method");
     private JTextField urlTextField;
     private JButton browseButton;
@@ -55,6 +56,7 @@ public class ImageAnalysisGUI extends JFrame implements ActionListener, Property
 
         this.menuBar.add(fileMenu);
         this.fileMenu.add(fileMenuItem);
+        this.fileMenu.add(saveFileMenuItem);
         this.fileMenu.add(testMethodMenuItem);
 
         this.setJMenuBar(menuBar);
@@ -150,6 +152,12 @@ public class ImageAnalysisGUI extends JFrame implements ActionListener, Property
             }
         });
         testMethodMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+        saveFileMenuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try (FileWriter file = new FileWriter("masterfile.json")) {

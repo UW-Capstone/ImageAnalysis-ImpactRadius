@@ -1,0 +1,101 @@
+id,name,child,parent
+3,"Shoes (Apparel, Shoes & Accessories)",Shoes,"Apparel, Shoes & Accessories"
+4,"Jewelry & Watches (Apparel, Shoes & Accessories)",Jewelry & Watches,"Apparel, Shoes & Accessories"
+5,"Bags & Accessories (Apparel, Shoes & Accessories)",Bags & Accessories,"Apparel, Shoes & Accessories"
+6,"Luxury (Apparel, Shoes & Accessories)",Luxury,"Apparel, Shoes & Accessories"
+7,"Specialty Sizes (Apparel, Shoes & Accessories)",Specialty Sizes,"Apparel, Shoes & Accessories"
+8,Art & Photography (Art & Entertainment),Art & Photography,Art & Entertainment
+9,Art & Craft Supplies (Art & Entertainment),Art & Craft Supplies,Art & Entertainment
+10,Movies & Music (Art & Entertainment),Movies & Music,Art & Entertainment
+11,Books & Magazines (Art & Entertainment),Books & Magazines,Art & Entertainment
+12,Tickets & Shows (Art & Entertainment),Tickets & Shows,Art & Entertainment
+13,Entertainment & Activities (Art & Entertainment),Entertainment & Activities,Art & Entertainment
+14,Collectibles & Hobbies (Art & Entertainment),Collectibles & Hobbies,Art & Entertainment
+15,Parts & Accessories (Auto & Recreational Vehicles),Parts & Accessories,Auto & Recreational Vehicles
+16,Automobiles & Auto Services (Auto & Recreational Vehicles),Automobiles & Auto Services,Auto & Recreational Vehicles
+17,Recreational Vehicles (Auto & Recreational Vehicles),Recreational Vehicles,Auto & Recreational Vehicles
+18,"B2B (B2B, Services & Office Supplies)",B2B,"B2B, Services & Office Supplies"
+19,"Supplies & Furniture (B2B, Services & Office Supplies)",Supplies & Furniture,"B2B, Services & Office Supplies"
+20,"Career (B2B, Services & Office Supplies)",Career,"B2B, Services & Office Supplies"
+21,"Clothing & Accessories (Baby, Kids & Toys)",Clothing & Accessories,"Baby, Kids & Toys"
+22,"Games/Toys (Baby, Kids & Toys)",Games\/Toys,"Baby, Kids & Toys"
+23,"Baby Essentials (Baby, Kids & Toys)",Baby Essentials,"Baby, Kids & Toys"
+24,"Educational (Baby, Kids & Toys)",Educational,"Baby, Kids & Toys"
+25,"Baby & Kids Home (Baby, Kids & Toys)",Baby & Kids Home,"Baby, Kids & Toys"
+26,Disaster Relief (Charitable Organizations),Disaster Relief,Charitable Organizations
+27,Charitable Causes (Charitable Organizations),Charitable Causes,Charitable Organizations
+28,Online Dating (Dating & Romance),Online Dating,Dating & Romance
+29,Romance (Dating & Romance),Romance,Dating & Romance
+30,Computers (Computers & Electronics),Computers,Computers & Electronics
+31,Consumer Electronics (Computers & Electronics),Consumer Electronics,Computers & Electronics
+32,Accessories & Peripherals (Computers & Electronics),Accessories & Peripherals,Computers & Electronics
+33,Software (Computers & Electronics),Software,Computers & Electronics
+34,Gaming (Computers & Electronics),Gaming,Computers & Electronics
+35,Mobile Services & Telecommunications (Computers & Electronics),Mobile Services & Telecommunications,Computers & Electronics
+36,College (Education),College,Education
+37,Learning (Education),Learning,Education
+38,Textbooks & Supplies (Education),Textbooks & Supplies,Education
+39,"Loans & Financial Services (Financial, Insurance & Legal Services)",Loans & Financial Services,"Financial, Insurance & Legal Services"
+40,"Credit Cards, Reporting & Repair (Financial, Insurance & Legal Services)","Credit Cards, Reporting & Repair","Financial, Insurance & Legal Services"
+41,"Tax (Financial, Insurance & Legal Services)",Tax,"Financial, Insurance & Legal Services"
+42,"Real Estate (Financial, Insurance & Legal Services)",Real Estate,"Financial, Insurance & Legal Services"
+43,"Insurance (Financial, Insurance & Legal Services)",Insurance,"Financial, Insurance & Legal Services"
+44,"Legal (Financial, Insurance & Legal Services)",Legal,"Financial, Insurance & Legal Services"
+45,"Flowers (Flowers, Gifts, Food & Drink)",Flowers,"Flowers, Gifts, Food & Drink"
+46,"Gifts & Stationery (Flowers, Gifts, Food & Drink)",Gifts & Stationery,"Flowers, Gifts, Food & Drink"
+47,"Gourmet (Flowers, Gifts, Food & Drink)",Gourmet,"Flowers, Gifts, Food & Drink"
+48,"Wine & Spirits (Flowers, Gifts, Food & Drink)",Wine & Spirits,"Flowers, Gifts, Food & Drink"
+49,"Food & Drink (Flowers, Gifts, Food & Drink)",Food & Drink,"Flowers, Gifts, Food & Drink"
+50,Health & Beauty (Organic & Eco-Friendly),Health & Beauty,Organic & Eco-Friendly
+51,Apparel & Accessories (Organic & Eco-Friendly),Apparel & Accessories,Organic & Eco-Friendly
+52,Home & Garden (Organic & Eco-Friendly),Home & Garden,Organic & Eco-Friendly
+53,Food & Gifts (Organic & Eco-Friendly),Food & Gifts,Organic & Eco-Friendly
+54,"First Aid & pharmacy (Pharmacy, Health & Beauty)",First Aid & pharmacy,"Pharmacy, Health & Beauty"
+55,"Diet & Nutrition (Pharmacy, Health & Beauty)",Diet & Nutrition,"Pharmacy, Health & Beauty"
+56,"Vision (Pharmacy, Health & Beauty)",Vision,"Pharmacy, Health & Beauty"
+57,"Spa & Personal Grooming (Pharmacy, Health & Beauty)",Spa & Personal Grooming,"Pharmacy, Health & Beauty"
+58,"Fragrance (Pharmacy, Health & Beauty)",Fragrance,"Pharmacy, Health & Beauty"
+59,"Cosmetics & Skin Care (Pharmacy, Health & Beauty)",Cosmetics & Skin Care,"Pharmacy, Health & Beauty"
+60,Bed & Bath (Home & Garden),Bed & Bath,Home & Garden
+61,Kitchen & Dining (Home & Garden),Kitchen & Dining,Home & Garden
+62,Furniture & Home Decor (Home & Garden),Furniture & Home Decor,Home & Garden
+63,Patio & Garden (Home & Garden),Patio & Garden,Home & Garden
+64,Home Improvement (Home & Garden),Home Improvement,Home & Garden
+65,Household Essentials & Services (Home & Garden),Household Essentials & Services,Home & Garden
+66,Apps (Apps & Downloads),Apps,Apps & Downloads
+67,Games (Apps & Downloads),Games,Apps & Downloads
+68,Movie & TV (Apps & Downloads),Movie & TV,Apps & Downloads
+69,Books & Newsstand (Apps & Downloads),Books & Newsstand,Apps & Downloads
+70,Shopping (Apps & Downloads),Shopping,Apps & Downloads
+71,"Themes, Code, Graphics, Video & more (Apps & Downloads)","Themes, Code, Graphics, Video & more",Apps & Downloads
+72,Pet Supplies (Pets),Pet Supplies,Pets
+73,Pet Services (Pets),Pet Services,Pets
+74,"Winter (Special Occasions, Seasonal & Events)",Winter,"Special Occasions, Seasonal & Events"
+75,"Spring (Special Occasions, Seasonal & Events)",Spring,"Special Occasions, Seasonal & Events"
+76,"Summer (Special Occasions, Seasonal & Events)",Summer,"Special Occasions, Seasonal & Events"
+77,"Fall (Special Occasions, Seasonal & Events)",Fall,"Special Occasions, Seasonal & Events"
+78,"Party & Party Supplies (Special Occasions, Seasonal & Events)",Party & Party Supplies,"Special Occasions, Seasonal & Events"
+79,"Sports Apparel & Accessories (Sports, Outdoor & Fitness)",Sports Apparel & Accessories,"Sports, Outdoor & Fitness"
+80,"Sports & Exercise Equipment (Sports, Outdoor & Fitness)",Sports & Exercise Equipment,"Sports, Outdoor & Fitness"
+81,"Outdoors & Recreation (Sports, Outdoor & Fitness)",Outdoors & Recreation,"Sports, Outdoor & Fitness"
+82,"Apparel, Shoes & Accessories (Subscriptions & Services)","Apparel, Shoes & Accessories",Subscriptions & Services
+83,"Home, Pet & Garden (Subscriptions & Services)","Home, Pet & Garden",Subscriptions & Services
+84,Food & Beverages (Subscriptions & Services),Food & Beverages,Subscriptions & Services
+85,Bath & Beauty (Subscriptions & Services),Bath & Beauty,Subscriptions & Services
+86,Gifts & Services (Subscriptions & Services),Gifts & Services,Subscriptions & Services
+87,Sports & Outdoor (Subscriptions & Services),Sports & Outdoor,Subscriptions & Services
+88,Images (Subscriptions & Services),Images,Subscriptions & Services
+89,Transportation (Travel),Transportation,Travel
+90,Accommodations (Travel),Accommodations,Travel
+91,Vacations (Travel),Vacations,Travel
+92,Accessories & Services (Travel),Accessories & Services,Travel
+93,Website Hosting (Internet Services),Website Hosting,Internet Services
+94,CDN Service (Internet Services),CDN Service,Internet Services
+95,Server Hosting (Internet Services),Server Hosting,Internet Services
+96,Internet Service Provider (Internet Services),Internet Service Provider,Internet Services
+97,"Templates, Fonts, Add-ons & more (Internet Services)","Templates, Fonts, Add-ons & more",Internet Services
+98,Auctions (Marketplace),Auctions,Marketplace
+99,Handmade Goods (Marketplace),Handmade Goods,Marketplace
+100,Creative Digital Assets (Marketplace),Creative Digital Assets,Marketplace
+1,"Women's Apparel (Apparel, Shoes & Accessories)",Women's Apparel,"Apparel, Shoes & Accessories"
+2,"Men's Apparel (Apparel, Shoes & Accessories)",Men's Apparel,"Apparel, Shoes & Accessories"

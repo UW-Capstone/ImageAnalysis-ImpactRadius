@@ -1,6 +1,5 @@
 import com.google.cloud.vision.v1.Image;
 import com.google.cloud.vision.v1.*;
-import com.google.common.collect.Table;
 import com.google.protobuf.ByteString;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -13,7 +12,6 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -42,19 +40,25 @@ public class ImageAnalysisGUI extends JFrame {
     private JPanel resultsPanel;
     private JScrollPane resultsScrollPane;
     private JTextPane resultsTextPane;
+    private JLabel localeLabel;
     private String FILE_IN_URL;
     private boolean FILE_OUT_FLAG = false; //TODO MAKE THIS A CHECKBOX IN THE GUI.
     private boolean SQL_CONNECTION_STATUS = false;
     private int MAX_NUMBER_OF_RESULTS_PER_IMAGE = 10;
-    /*private JSONObject jsonObj = new JSONObject();
-    private JSONArray imageData = new JSONArray();
-    private JSONObject innerObject = new JSONObject();*/
     List<String> resultsList = new ArrayList<String>();
+    List<String> bodyPartsList = new ArrayList<String>();
     Map<String, Integer> sortedMap;
+
+    static DecisionTree apparelTree;
+    static DecisionTree artsTree;
+
+    static BufferedReader keyboardInput = new
+            BufferedReader(new InputStreamReader(System.in));
 
     int CURRENT_PROFILE_ID = 0;
     String CURRENT_PROFILE_URLS = "";
     String CURRENT_PROFILE_SCREENSHOT_URL = "";
+    String CURRENT_PROFILE_LOCALE = "";
 
 
     public static void main(String[] args) {
@@ -77,7 +81,7 @@ public class ImageAnalysisGUI extends JFrame {
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setContentPane(mainPanel);
         this.setResizable(false);
-        this.setPreferredSize(new Dimension(800, 800));
+        this.setPreferredSize(new Dimension(800, 500));
         this.pack();
 
         analyzeButton.addActionListener(new ActionListener() {
@@ -88,65 +92,75 @@ public class ImageAnalysisGUI extends JFrame {
              */
             @Override
             public void actionPerformed(ActionEvent e) {
+                resultsTextPane.setText("Please wait while we run image analysis...");
                 progressBar.setValue(0);
-                //analyzeButton.setEnabled(false);
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            if (labelsCheckBox.isSelected()) {
-                                for (int i = 1; i <= 24; i++) {
-                                    detectLabels(FILE_IN_URL + "Cropped" + i + ".jpg");
-                                }
+                analyzeButton.setEnabled(false);
+                new Thread(() -> {
+                    try {
+                        if (labelsCheckBox.isSelected()) {
+                            for (int i = 1; i <= 24; i++) {
+                                detectLabels(FILE_IN_URL + "Cropped" + i + ".jpg");
                             }
-                            progressBar.setValue(25);
+                        }
+                        progressBar.setValue(50);
 
 
-                            if (objectsCheckBox.isSelected()) {
-                                for (int i = 1; i <= 24; i++) {
-                                    detectLocalizedObjects(FILE_IN_URL + "Cropped" + i + ".jpg");
-                                }
+                        if (objectsCheckBox.isSelected()) {
+                            for (int i = 1; i <= 24; i++) {
+                                detectLocalizedObjects(FILE_IN_URL + "Cropped" + i + ".jpg");
                             }
-                            //progressBar.setValue(50);
-
-                            /*if (landmarksCheckBox.isSelected()) {
-                                for (int i = 1; i <= 24; i++) {
-                                    detectLandmarks(FILE_IN_URL + "Cropped" + i + ".jpg");
-                                }
-                            }*/
-                            //progressBar.setValue(75);
-
-                            /*
-                            if (textCheckBox.isSelected()) {
-                                for (int i = 1; i <= 24; i++) {
-                                    detectText(FILE_IN_URL + "Cropped" + i + ".jpg");
-                                }
-                            }*/
-                            detectText(FILE_IN_URL + "CroppedHeader" + ".jpg");
-
-                            if (!labelsCheckBox.isSelected() && !objectsCheckBox.isSelected() && !landmarksCheckBox.isSelected() && !textCheckBox.isSelected()) {
-                                JOptionPane.showMessageDialog(null, "Nothing detectors selected, please select at least one detection and press analyze.");
-                            }
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
                         }
                         progressBar.setValue(100);
-                        loadButton.setEnabled(true);
-                        urlTextField.setText("");
-                        countResults();
 
+                        /*if (landmarksCheckBox.isSelected()) {
+                            for (int i = 1; i <= 24; i++) {
+                                detectLandmarks(FILE_IN_URL + "Cropped" + i + ".jpg");
+                            }
+                        }*/
+                        //progressBar.setValue(75);
+
+                        /*
+                        if (textCheckBox.isSelected()) {
+                            for (int i = 1; i <= 24; i++) {
+                                detectText(FILE_IN_URL + "Cropped" + i + ".jpg");
+                            }
+                        }*/
+                        detectText(FILE_IN_URL + "CroppedHeader" + ".jpg");
+
+                        if (!labelsCheckBox.isSelected() && !objectsCheckBox.isSelected() && !landmarksCheckBox.isSelected() && !textCheckBox.isSelected()) {
+                            JOptionPane.showMessageDialog(null, "Nothing detectors selected, please select at least one detection and press analyze.");
+                        }
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
                     }
+                    loadButton.setEnabled(true);
+                    urlTextField.setText("");
+                    countResults();
+
                 }).start();
             }
         });
         testMethodMenuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
+
+                /*apparelTree = new DecisionTree();
+                artsTree = new DecisionTree();
+                // Generate tree
+                generateTrees();
+
+                // Output tree
+                //System.out.println("\nOUTPUT DECISION TREE");
+                //System.out.println("====================");
+                //apparelTree.outputBinTree();
+
+                // Query tree
                 try {
-                    tagsToCategories();
+                    queryTree();
                 } catch (IOException ex) {
                     ex.printStackTrace();
-                }
+                }*/
             }
         });
         saveFileMenuItem.addActionListener(new ActionListener() {
@@ -165,7 +179,7 @@ public class ImageAnalysisGUI extends JFrame {
         loadButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                localeLabel.setText("Profile locale: --");
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -175,9 +189,9 @@ public class ImageAnalysisGUI extends JFrame {
                         imageData.put(innerObject);*/
 
                         String JSON_DATA = sqlConnection(urlTextField.getText());
-                        int listingID = 0;
+                        /*int listingID = 0;
                         String urls = "";
-                        String screenshotURL = "";
+                        String screenshotURL = "";*/
 
                         final JSONObject obj = new JSONObject(JSON_DATA);
                         final JSONArray listings = obj.getJSONArray("listings");
@@ -185,13 +199,13 @@ public class ImageAnalysisGUI extends JFrame {
 
                         for (int i = 0; i < n; ++i) { //SHOULD ALWAYS BE n = 1
                             final JSONObject person = listings.getJSONObject(i);
-                            listingID = person.getInt("listing_id");
-                            urls = person.getString("urls");
-                            screenshotURL = person.getString("screenshot_url");
+                            CURRENT_PROFILE_ID = person.getInt("listing_id");
+                            CURRENT_PROFILE_URLS = person.getString("urls");
+                            CURRENT_PROFILE_SCREENSHOT_URL = person.getString("screenshot_url");
                         }
 
                         try {
-                            prepareImageForAnalysis(listingID, urls, screenshotURL);
+                            prepareImageForAnalysis(CURRENT_PROFILE_ID, CURRENT_PROFILE_URLS, CURRENT_PROFILE_SCREENSHOT_URL);
                         } catch (IOException ex) {
                             ex.printStackTrace();
                         }
@@ -211,9 +225,13 @@ public class ImageAnalysisGUI extends JFrame {
      */
     public void prepareImageForAnalysis(int theID, String theURLS, String theScreenshotURL) throws IOException {
 
-        CURRENT_PROFILE_ID = theID;
-        CURRENT_PROFILE_URLS = theURLS;
-        CURRENT_PROFILE_SCREENSHOT_URL = theScreenshotURL;
+
+        String[] bodyPartsArray = new String[]{"Person", "Head", "Shoulders", "Shoulder", "Thigh", "Joint", "Nose",
+                "Chin", "Cheek", "Eyebrow", "Face", "Forehead", "Leg", "Lip", "Neck", "Skin", "Arm","Finger", "Eye", "Human", "Waist"};
+
+        for (int i = 0; i<bodyPartsArray.length; i++){
+            bodyPartsList.add(bodyPartsArray[i]);
+        }
 
         /*
         EACH LARGE SCREENSHOT IMAGE IS 1920px x 3352px
@@ -229,6 +247,9 @@ public class ImageAnalysisGUI extends JFrame {
         ACCURITE DATA FOR THE WHOLE PROFILE.
 
          */
+        int imageHeight = 0;
+        int imageWidth = 0;
+
         String formattedURL = theURLS.replace("instagram.com/", "");
         String path = "src/main/resources/";
         new File("src/main/resources/" + formattedURL + "").mkdirs();
@@ -240,6 +261,9 @@ public class ImageAnalysisGUI extends JFrame {
             URL url = new URL(theScreenshotURL);
             // read the url
             bufferedImage = ImageIO.read(url);
+            imageHeight = bufferedImage.getHeight();
+            imageWidth = bufferedImage.getWidth();
+
             ImageIO.write(bufferedImage, "jpg", new File(path + formattedURL + "/" + formattedURL + ".jpg"));
 
         } catch (IOException e) {
@@ -266,6 +290,7 @@ public class ImageAnalysisGUI extends JFrame {
         // on it because we can pull maybe some contextual information about where they are from or language they speak.
         int profileHeaderX = 935;
         int profileHeaderY = 589;
+
         BufferedImage newHeaderImage = cropImage(bufferedImage, 493, 0, profileHeaderX, profileHeaderY);
         File pathToCroppedHeaderFile = new File("src/main/resources/" + formattedURL + "/" + formattedURL + "" + "CroppedHeader.jpg");
         ImageIO.write(newHeaderImage, "jpg", pathToCroppedHeaderFile);
@@ -377,12 +402,10 @@ public class ImageAnalysisGUI extends JFrame {
             // https://stackoverflow.com/questions/47368685/android-google-cloud-vision-api-get-json-and-use-json-to-go-to-another-acitvity
             String theData = com.google.protobuf.util.JsonFormat.printer().print(response);
 
-
             if (!FILE_OUT_FLAG) {
                 final JSONObject obj = new JSONObject(theData);
                 final JSONArray imageData = obj.getJSONArray("responses");
                 final int n = imageData.length();
-
                 for (int i = 0; i < n; ++i) {
                     final JSONObject person = imageData.getJSONObject(i);
                     if (person.isEmpty()) {
@@ -394,9 +417,6 @@ public class ImageAnalysisGUI extends JFrame {
                             JSONObject labelObject = labelArray.getJSONObject(l);
                             String labelTest = labelObject.getString("description");
                             resultsList.add(labelTest);
-                            //System.out.println(labelTest);
-
-
                         }
                         /*JSONArray labelArray = person.getJSONArray("labelAnnotations");
                         addToMasterFile("labelAnnotations", labelArray);*/
@@ -441,6 +461,10 @@ public class ImageAnalysisGUI extends JFrame {
             // I found this on stackoverflow and seems to be the only way I can get the response to be in JSON correctly.
             // https://stackoverflow.com/questions/47368685/android-google-cloud-vision-api-get-json-and-use-json-to-go-to-another-acitvity
             String theData = com.google.protobuf.util.JsonFormat.printer().print(response);
+
+            System.out.println("#####################################");
+            System.out.println(theData);
+
             if (!FILE_OUT_FLAG) {
                 final JSONObject obj = new JSONObject(theData);
                 final JSONArray imageData = obj.getJSONArray("responses");
@@ -451,15 +475,16 @@ public class ImageAnalysisGUI extends JFrame {
                         //NO DATA HERE
                     } else {
                         JSONArray textArray = person.getJSONArray("textAnnotations");
-                        int landmarkArrayLength = textArray.length();
-                        for (int l = 0; l < landmarkArrayLength; l++) {
-                            JSONObject textObject = textArray.getJSONObject(l);
-                            String textTest = textObject.getString("description");
-                            resultsList.add(textTest);
+                        int textArrayLength = textArray.length();
+                        //for (int l = 0; l < textArrayLength; l++) {
+                            JSONObject textObject = textArray.getJSONObject(0);
+                            CURRENT_PROFILE_LOCALE = textObject.getString("locale");
+                            localeLabel.setText("Profile locale: " + CURRENT_PROFILE_LOCALE);
+                            //resultsList.add(textTest);
                             //System.out.println(landmarkTest);
 
 
-                        }
+                        //}
                         /*JSONArray textArray = person.getJSONArray("textAnnotations");
                         addToMasterFile("textAnnotations", textArray);*/
                     }
@@ -478,7 +503,7 @@ public class ImageAnalysisGUI extends JFrame {
      * @param filePath Takes in local disk filepath to image to be scanned with landmark detection by google
      * @throws Exception
      */
-    public void detectLandmarks(String filePath) throws Exception {
+    /*public void detectLandmarks(String filePath) throws Exception {
         java.util.List<AnnotateImageRequest> requests = new ArrayList<>();
         ByteString imgBytes = ByteString.readFrom(new FileInputStream(filePath));
 
@@ -530,7 +555,7 @@ public class ImageAnalysisGUI extends JFrame {
                 writer.close();
             }
         }
-    }
+    }*/
 
     /**
      * Detects objects that are found in an image
@@ -572,7 +597,7 @@ public class ImageAnalysisGUI extends JFrame {
                             JSONObject localizedObject = localizedArray.getJSONObject(l);
                             String localizedTest = localizedObject.getString("name");
                             resultsList.add(localizedTest);
-                            //System.out.println(landmarkTest);
+
 
 
                         }
@@ -650,69 +675,35 @@ public class ImageAnalysisGUI extends JFrame {
         return output;
     }
 
-    //This was more of a test in parsing the file we will create that has all the data from google vision.
-    public void parseJSON() throws IOException {
+    public void sqlInsert(int theID, String theTag) {
+        String connectionUrl = "jdbc:sqlserver://73.118.249.57:1433;" +
+                "instanceName=SQLEXPRESS;" +
+                "databaseName=Influencer;" +
+                "user=JamesNMartin;" +
+                "password=nothingtoseehere";
 
-
-        //String path = "C:\\Users\\james\\IdeaProjects\\ImageAnalysis-ImpactRadius\\masterfile.json";
-        String content = new String(Files.readAllBytes(Paths.get("C:\\Users\\james\\IdeaProjects\\ImageAnalysis-ImpactRadius\\masterfile.json")), StandardCharsets.UTF_8);
-
-
-        final JSONObject obj = new JSONObject(content);
-        final JSONArray imageData = obj.getJSONArray("imageData");
-        final int n = imageData.length();
-
-        for (int i = 0; i < n; ++i) {
-            final JSONObject person = imageData.getJSONObject(i);
-
-            JSONArray labelArray = person.getJSONArray("labelAnnotations");
-            int labelArrayLength = labelArray.length();
-
-            JSONArray textArray = person.getJSONArray("textAnnotations");
-            int textArrayLength = textArray.length();
-
-            /*JSONArray landmarkArray = person.getJSONArray("landmarkAnnotations");
-            int landmarkArrayLength = landmarkArray.length();*/
-
-            JSONArray objectsArray = person.getJSONArray("localizedObjectAnnotations");
-            int objectArrayLength = objectsArray.length();
-
-            for (int j = 0; j < labelArrayLength; j++) {
-                JSONObject labelObject = labelArray.getJSONObject(j);
-                String labelTest = labelObject.getString("description");
-                resultsList.add(labelTest);
-                //System.out.println(labelTest);
-            }
-            for (int k = 0; k < textArrayLength; k++) {
-                JSONObject textObject = textArray.getJSONObject(k);
-                String textTest = textObject.getString("description");
-                //resultsList.add(textTest);
-                //System.out.println(textTest);
-            }
-            /*for (int l = 0; l < landmarkArrayLength; l++) {
-                JSONObject landmarkObject = landmarkArray.getJSONObject(l);
-                String landmarkTest = landmarkObject.getString("description");
-                resultsList.add(landmarkTest);
-                //System.out.println(landmarkTest);
-
-
-            }*/
-            for (int m = 0; m < objectArrayLength; m++) {
-                JSONObject localizedObject = objectsArray.getJSONObject(m);
-                String objectTest = localizedObject.getString("name");
-                resultsList.add(objectTest);
-                //System.out.println(objectTest);
-            }
+        try (Connection con = DriverManager.getConnection(connectionUrl); Statement stmt = con.createStatement();) {
+            // \/ Second select here to remove random text form end of the query
+            String SQLJSON = "INSERT INTO genTags (RID, tag) VALUES ('" + theID + "', '" + theTag + "')";
+            stmt.executeUpdate(SQLJSON);//TODO fix this because im not doing the right command for SQL insert.
+        }
+        // Handle any errors that may have occurred.
+        catch (SQLException e) {
+            e.printStackTrace();
         }
     }
+
     //Found this method here: https://stackoverflow.com/a/13913206/4657273
     public void countResults() {
         // Creating a HashMap containing string
         // as a key and occurrences as  a value
         HashMap<String, Integer> stringIntegerHashMap = new HashMap<>();
+        resultsList.removeAll(new HashSet(bodyPartsList));
 
         // Converting given string to string array
         String[] strArray = new String[resultsList.size()];
+
+        //resultsList = new ArrayList(Arrays.asList(strArray));
 
         for (int i = 0; i < resultsList.size(); i++) strArray[i] = resultsList.get(i);
         //for (String x : strArray) System.out.print(x + " ");
@@ -720,7 +711,9 @@ public class ImageAnalysisGUI extends JFrame {
 
         // checking each string of strArray
         for (String c : strArray) {
+
             if (stringIntegerHashMap.containsKey(c)) {
+
 
                 // If string is present in stringIntegerHashMap,
                 // incrementing it's count by 1
@@ -733,42 +726,29 @@ public class ImageAnalysisGUI extends JFrame {
             }
         }
         sortedMap = sortByValue(stringIntegerHashMap, false);
-        //resultsTextPane.setText(sortedMap.toString());
-        //printMap(sortedMap);
-        resultsList.clear();
+        resultsTextPane.setText(sortedMap.toString());
+        //sendMapToSQL();//TODO Turn me back on to insert data to database
     }
-    public void tagsToCategories() throws IOException {
-        String csvFile = "src/main/resources/ImpactCategoriesNewFormat.csv";
-        BufferedReader br = null;
-        String line = "";
-        String cvsSplitBy = ",";
 
-        try {
-
-            br = new BufferedReader(new FileReader(csvFile));
-            while ((line = br.readLine()) != null) {
-
-                // use comma as separator
-                System.out.println(line);
-                /*String[] categories = line.split(cvsSplitBy);
-
-                System.out.println("Level 0: " + categories[0] + "\nLevel 1: " + categories[1] + "\n");*/
-
-            }
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (br != null) {
-                try {
-                    br.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+    public void sendMapToSQL() {
+        for (Map.Entry<String, Integer> entry : sortedMap.entrySet()) {
+            Integer hitCount = entry.getValue();
+            String s = entry.getKey();
+            if (hitCount >= 3) {
+                sqlInsert(CURRENT_PROFILE_ID, s);
             }
         }
+        cleanUp();
+    }
+
+    private void cleanUp() {
+        progressBar.setValue(0);
+        resultsList.clear();
+        sortedMap.clear();
+        loadButton.setEnabled(true);
+    }
+
+    public void tagsToCategories(Map<String, Integer> theMap) throws IOException {
 
     }
 
@@ -786,7 +766,6 @@ public class ImageAnalysisGUI extends JFrame {
 
     //Found this method here: https://stackoverflow.com/a/13913206/4657273
     public static void printMap(Map<String, Integer> theMap) {
-        //theMap.forEach((key, value) -> System.out.println(key + " " + value));
         theMap.forEach((key, value) -> System.out.println(key + " " + value));
 
     }
